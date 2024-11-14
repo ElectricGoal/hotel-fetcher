@@ -94,3 +94,5 @@ Secondly, perform a group-by operation on the **id** field in the DataFrame, and
 - **images.site**: Merge list and remove duplicates
 - **images.amenities**: Merge list and remove duplicates
 - **booking_conditions**: Select longest valid text
+
+Finally, filtering on Dataframe
