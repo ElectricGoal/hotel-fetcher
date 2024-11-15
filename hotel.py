@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Optional
 
 @dataclass
 class Image:
-    link: str = None
-    description: str = None
+    link: Optional[str] = None
+    description: Optional[str] = None
 
 @dataclass
 class Images:
@@ -14,11 +14,11 @@ class Images:
 
 @dataclass
 class Location:
-    lat: float = None
-    lng: float = None
-    address: str = None
-    city: str = None
-    country: str = None
+    lat: Optional[float] = None
+    lng: Optional[float] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    country: Optional[str] = None
 
 @dataclass
 class Amenities:
@@ -27,11 +27,11 @@ class Amenities:
 
 @dataclass
 class Hotel:
-    id: str = None
-    destination_id: int = None
-    name: str = None
+    id: str = ''
+    destination_id: int = 0
+    name: Optional[str] = None
     location: Location = field(default_factory=Location)
-    description: str = None
+    description: Optional[str] = None
     amenities: Amenities = field(default_factory=Amenities)
     images: Images = field(default_factory=Images)
     booking_conditions: List[str] = field(default_factory=list)

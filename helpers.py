@@ -23,7 +23,35 @@ class AggHelpers:
                 combined.extend(item)
 
         # Remove duplicates and preserve order
-        return list({str(e): e for e in combined}.values())  
+        return list({str(e): e for e in combined}.values())
+
+    @staticmethod
+    def merge_dict_lists(series: pd.Series, key: str) -> list:
+        """
+        Merge dictionary lists and remove duplicates
+
+        :param series: The series to merge.
+        :param key: The key in dict to use for removing duplicates.
+        :return: The merged list.
+        """
+        combined = []
+        for item in series:
+            # Convert string representation of lists to actual lists
+            if isinstance(item, str):
+                item = ast.literal_eval(item)
+            if isinstance(item, list):
+                combined.extend(item)
+
+        # Remove duplicates and preserve order
+        items = set()
+        results = []
+        for item in combined:
+            link = item[key]
+            if link is not None and link not in items:
+                items.add(link)
+                results.append(item)
+       
+        return results
 
     @staticmethod
     def merge_text(series: pd.Series ) -> str:
@@ -34,7 +62,7 @@ class AggHelpers:
         :return: The merged text.
         """
         return " ".join(filter(None, series))
-    
+
     @staticmethod
     def first_valid_num(series: pd.Series) -> Union[float, None]:
         """
@@ -50,10 +78,10 @@ class AggHelpers:
             else:
                 try:
                     return float(val)
-                except:
+                except ValueError:
                     continue
         return None
-    
+
     @staticmethod
     def last_valid_num(series: pd.Series) -> Union[float, None]:
         """
@@ -69,10 +97,10 @@ class AggHelpers:
             else:
                 try:
                     return float(val)
-                except:
+                except ValueError:
                     continue
         return None
-    
+
     @staticmethod
     def first_valid_list(series: pd.Series) -> Union[list, None]:
         """
@@ -81,7 +109,9 @@ class AggHelpers:
         :param series: The series to search.
         :return: The first valid list.
         """
-        valid_values = series[series.notnull() & series.apply(lambda x: isinstance(x, list) and len(x) > 0)]
+        valid_values = pd.Series(
+            series[series.notnull() & series.apply(lambda x: isinstance(x, list) and len(x) > 0)]
+        )
         return valid_values.iloc[0] if not valid_values.empty else None
 
     @staticmethod
@@ -92,7 +122,9 @@ class AggHelpers:
         :param series: The series to search.
         :return: The last valid list.
         """
-        valid_values = series[series.notnull() & series.apply(lambda x: isinstance(x, list) and len(x) > 0)]
+        valid_values = pd.Series(
+            series[series.notnull() & series.apply(lambda x: isinstance(x, list) and len(x) > 0)]
+        )
         return valid_values.iloc[-1] if not valid_values.empty else None
 
     @staticmethod
@@ -103,9 +135,11 @@ class AggHelpers:
         :param series: The series to search.
         :return: The longest list.
         """
-        valid_values = series[series.notnull() & series.apply(lambda x: isinstance(x, list) and len(x) > 0)]
+        valid_values = pd.Series(
+            series[series.notnull() & series.apply(lambda x: isinstance(x, list) and len(x) > 0)]
+        )
         return valid_values.loc[valid_values.str.len().idxmax()] if not valid_values.empty else None
-    
+
     @staticmethod
     def longest_valid_text(series: pd.Series) -> Union[str, None]:
         """
@@ -114,9 +148,11 @@ class AggHelpers:
         :param series: The series to search.
         :return: The longest text.
         """
-        valid_values = series[series.notnull() & (series != '')]
+        valid_values = pd.Series(
+            series[series.notnull() & (series != '')]
+        )
         return valid_values.loc[valid_values.str.len().idxmax()] if not valid_values.empty else None
-    
+
 
 
 

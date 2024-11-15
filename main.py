@@ -10,12 +10,12 @@ dotenv.load_dotenv()
 
 def fetch_hotels(hotel_ids, destination_ids):
     """Fetch hotels data from suppliers and return as json"""
-    
+
     # Initialize suppliers, able to add more suppliers here
     suppliers = [
-        AcmeSupplier(api_url=os.getenv('ACME_API_URL')),
-        PatagoniaSupplier(api_url=os.getenv('PATAGONIA_API_URL')),
-        PaperfliesSupplier(api_url=os.getenv('PAPERFLIES_API_URL')),
+        AcmeSupplier(api_url=os.getenv('ACME_API_URL') or ''),
+        PatagoniaSupplier(api_url=os.getenv('PATAGONIA_API_URL') or ''),
+        PaperfliesSupplier(api_url=os.getenv('PAPERFLIES_API_URL') or '')
     ]
 
     # Fetch data from all suppliers
@@ -32,16 +32,16 @@ def fetch_hotels(hotel_ids, destination_ids):
 
     # Return as json
     return simplejson.dumps(filtered, ignore_nan=True)
-    
+
 def main():
     parser = argparse.ArgumentParser()
-    
+
     parser.add_argument("hotel_ids", type=str, help="Hotel IDs")
     parser.add_argument("destination_ids", type=str, help="Destination IDs")
-    
+
     # Parse the arguments
     args = parser.parse_args()
-    
+
     hotel_ids = args.hotel_ids
     destination_ids = args.destination_ids
 
@@ -53,10 +53,18 @@ def main():
 
     if destination_ids.lower().strip() != 'none':
         destination_ids = destination_ids.split(',')
-        destination_ids = [int(x) for x in destination_ids]
+        new_destination_ids = []
+        for destination_id in destination_ids:
+            try:
+                destination_id = int(destination_id)
+                new_destination_ids.append(destination_id)
+            except ValueError:
+                # Set to non-sense value
+                new_destination_ids.append(-10000)
+        destination_ids = new_destination_ids
     else:
         destination_ids = []
-        
+
     # Fetch hotels
     result = fetch_hotels(hotel_ids, destination_ids)
     print(result)

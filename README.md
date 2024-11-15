@@ -88,11 +88,17 @@ Secondly, perform a group-by operation on the **id** field in the DataFrame, and
 - **location.city**: Select longest valid text
 - **location.country**: Select longest valid text
 - **description**: Select longest valid text
-- **amenities.general**: Select last valid list
-- **amenities.room**: Select last valid list
+- **amenities.general**: Merge list and remove duplicate
+- **amenities.room**: Select longest valid list
 - **images.rooms**: Merge list and remove duplicates
 - **images.site**: Merge list and remove duplicates
 - **images.amenities**: Merge list and remove duplicates
-- **booking_conditions**: Select longest valid text
+- **booking_conditions**: Select longest valid list
 
 Finally, filtering on Dataframe
+
+### Add new supplier
+
+1. Write new Supplier class based on `BaseSupplier`
+2. Add new **API_URL** to `.env`
+3. Add new Supplier class to `suppliers` list in `main.py`

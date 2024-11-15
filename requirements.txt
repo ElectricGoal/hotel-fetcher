@@ -1,0 +1,4 @@
+pandas
+simplejson
+requests
+python-dotenv

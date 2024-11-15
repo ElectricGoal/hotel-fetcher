@@ -20,7 +20,7 @@ def parse_data(dto: dict, keys: Union[List[str], str]) -> Any:
         current_data = dto
         for key in keys:
             if not isinstance(current_data, dict) or key not in current_data:
-                return None
+                return []
             current_data = current_data[key]
         data = current_data
 
@@ -36,8 +36,10 @@ class BaseSupplier:
     def __init__(self, api_url: str):
         self.api_url = api_url
 
-    def parse(obj: dict) -> Hotel:
+    @staticmethod
+    def parse(dto: dict) -> Hotel:
         """Parse supplier-provided data into Hotel object"""
+        return Hotel()
 
     def fetch(self):
         resp = requests.get(self.api_url)
@@ -45,7 +47,7 @@ class BaseSupplier:
 
 class AcmeSupplier(BaseSupplier):
     """Supplier class for Acme data"""
-    
+
     @staticmethod
     def parse(dto: dict) -> Hotel:
         return Hotel(
@@ -64,10 +66,10 @@ class AcmeSupplier(BaseSupplier):
                 general=parse_data(dto, "Facilities"),
             )
         )
-    
+
 class PatagoniaSupplier(BaseSupplier):
     """Supplier class for Patagonia data"""
-    
+
     @staticmethod
     def parse(dto: dict) -> Hotel:
         return Hotel(
@@ -101,10 +103,10 @@ class PatagoniaSupplier(BaseSupplier):
                 ],
             ),
         )
-    
+
 class PaperfliesSupplier(BaseSupplier):
     """Supplier class for Paperflies data"""
-    
+
     @staticmethod
     def parse(dto: dict) -> Hotel:
         return Hotel(
